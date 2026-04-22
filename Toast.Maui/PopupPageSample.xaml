@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Mopups:PopupPage
+    x:Class="Toast.Maui.PopupPageSample"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Animations="clr-namespace:Mopups.Animations;assembly=Mopups"
+    xmlns:Mopups="clr-namespace:Mopups.Pages;assembly=Mopups"
+    Title="Aswin"
+    BackgroundInputTransparent="False"
+    CloseWhenBackgroundIsClicked="True"
+    HasSystemPadding="False">
+    <Mopups:PopupPage.Animation>
+        <Animations:MoveAnimation PositionIn="Center" PositionOut="Center" />
+    </Mopups:PopupPage.Animation>
+    <Grid
+        BackgroundColor="Blue"
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
+        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+            <Button
+                BackgroundColor="#D98E00"
+                Command="{Binding ShowWarningCommand}"
+                HorizontalOptions="Center"
+                Text="Warning (Center)"
+                TextColor="White"
+                VerticalOptions="Center" />
+        </VerticalStackLayout>
+    </Grid>
+
+</Mopups:PopupPage>

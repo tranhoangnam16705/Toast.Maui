@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build *)",
+      "Bash(awk 'NR>=290' \"C:\\\\Users\\\\namth2\\\\.claude\\\\projects\\\\E--Study-MAUI-Toart-Maui\\\\c95bc8a6-b62b-43d2-81dc-5694c7678b2c.jsonl\")"
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Toast.Maui/Toast.Maui.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+</Solution>
