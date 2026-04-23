@@ -1,3 +1,4 @@
+using CoreAnimation;
 using CoreGraphics;
 using Foundation;
 using Microsoft.Maui.ApplicationModel;
@@ -64,6 +65,23 @@ internal static partial class NativeToast
 
         var view = BuildToastView(options);
         var active = new Active(view, options, options.Position);
+
+        var slide = options.Position switch
+        {
+            ToastPosition.Top => -SlideDistance,
+            ToastPosition.Bottom => SlideDistance,
+            _ => 0f,
+        };
+
+        // Set initial state BEFORE entering the view hierarchy, wrapped in a
+        // disabled-actions CATransaction so these assignments never get folded
+        // into another toast's in-flight UIView.Animate block.
+        CATransaction.Begin();
+        CATransaction.DisableActions = true;
+        view.Alpha = 0f;
+        view.Transform = CGAffineTransform.MakeTranslation(0, slide);
+        CATransaction.Commit();
+
         ActiveToasts.Add(active);
 
         if (options.Position == ToastPosition.Bottom)
@@ -71,16 +89,7 @@ internal static partial class NativeToast
         else
             stack.AddArrangedSubview(view);
 
-        window.LayoutIfNeeded();
-
-        view.Alpha = 0f;
-        var slide = options.Position switch
-        {
-            ToastPosition.Top => -SlideDistance,
-            ToastPosition.Bottom => SlideDistance,
-            _ => 0f,
-        };
-        view.Transform = CGAffineTransform.MakeTranslation(0, slide);
+        stack.LayoutIfNeeded();
 
         AttachGestures(view, active);
 
