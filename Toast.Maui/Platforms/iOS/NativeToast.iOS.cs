@@ -1,4 +1,5 @@
 using CoreAnimation;
+using CoreFoundation;
 using CoreGraphics;
 using Foundation;
 using Microsoft.Maui.ApplicationModel;
@@ -24,7 +25,13 @@ internal static partial class NativeToast
     public static partial Task ShowAsync(ToastOptions options)
     {
         var tcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        MainThread.BeginInvokeOnMainThread(async () =>
+        // Dispatch truly async — MainThread.BeginInvokeOnMainThread runs
+        // synchronously when the caller is already on the main thread, which
+        // means PresentAsync's setup (AddArrangedSubview + UIView.Animate)
+        // would execute inside UIKit's touch event stack of the button press.
+        // Any in-flight CATransaction there ends up absorbing or cancelling
+        // the new animation — so a second rapid click never visibly fades in.
+        DispatchQueue.MainQueue.DispatchAsync(async () =>
         {
             try { await PresentAsync(options).ConfigureAwait(true); }
             catch { }
@@ -35,7 +42,7 @@ internal static partial class NativeToast
 
     public static partial void DismissCurrent()
     {
-        MainThread.BeginInvokeOnMainThread(() =>
+        DispatchQueue.MainQueue.DispatchAsync(() =>
         {
             if (ActiveToasts.Count == 0) return;
             ActiveToasts[^1].RequestDismiss();
@@ -44,7 +51,7 @@ internal static partial class NativeToast
 
     public static partial void DismissAll()
     {
-        MainThread.BeginInvokeOnMainThread(() =>
+        DispatchQueue.MainQueue.DispatchAsync(() =>
         {
             foreach (var t in ActiveToasts.ToArray())
                 t.RequestDismiss();
@@ -84,12 +91,20 @@ internal static partial class NativeToast
 
         ActiveToasts.Add(active);
 
-        if (options.Position == ToastPosition.Bottom)
-            stack.InsertArrangedSubview(view, 0);
-        else
-            stack.AddArrangedSubview(view);
+        // Adding an arranged subview while another is mid-animation lets
+        // UIStackView schedule an implicit layout animation that clashes
+        // with the new toast's explicit UIView.Animate. Force the add +
+        // layout to run with animations disabled so only the explicit
+        // fade-in below drives the appearance.
+        UIView.PerformWithoutAnimation(() =>
+        {
+            if (options.Position == ToastPosition.Bottom)
+                stack.InsertArrangedSubview(view, 0);
+            else
+                stack.AddArrangedSubview(view);
 
-        stack.LayoutIfNeeded();
+            stack.LayoutIfNeeded();
+        });
 
         AttachGestures(view, active);
 
@@ -338,7 +353,7 @@ internal static partial class NativeToast
 
         var root = new PassThroughViewController();
 
-        var window = new UIWindow(scene)
+        var window = new PassThroughWindow(scene)
         {
             WindowLevel = UIWindowLevel.Alert + 1,
             BackgroundColor = UIColor.Clear,
@@ -468,6 +483,22 @@ internal static partial class NativeToast
     private sealed class PassThroughViewController : UIViewController
     {
         public override void LoadView() => View = new PassThroughView { BackgroundColor = UIColor.Clear };
+    }
+
+    // UIWindow's default HitTest falls back to returning itself when no subview
+    // claims the point — and since iOS dispatches touches to the highest-level
+    // window whose HitTest returns non-nil, that fallback makes an overlay
+    // window absorb every tap on empty area. Returning nil for self-hits lets
+    // iOS continue down to the MAUI window underneath.
+    private sealed class PassThroughWindow : UIWindow
+    {
+        public PassThroughWindow(UIWindowScene scene) : base(scene) { }
+
+        public override UIView? HitTest(CGPoint point, UIEvent? uievent)
+        {
+            var hit = base.HitTest(point, uievent);
+            return ReferenceEquals(hit, this) ? null : hit;
+        }
     }
 
     private sealed class PassThroughView : UIView
