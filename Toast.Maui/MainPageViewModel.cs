@@ -8,6 +8,7 @@ namespace Toast.Maui;
 public sealed class MainPageViewModel
 {
     private readonly IToastService _toast;
+    public INavigation _naviagtion;
 
     public MainPageViewModel(IToastService toast)
     {
@@ -49,6 +50,11 @@ public sealed class MainPageViewModel
         {
             await MopupService.Instance.PushAsync(new PopupPageSample(_toast));
         });
+
+        ShowModelPageCommand = new Command(async () =>
+        {
+            await _naviagtion.PushModalAsync(new NavigationPage(new ModelPageSample(_toast)), true);
+        });
     }
 
     public ICommand ShowSuccessCommand { get; }
@@ -64,5 +70,5 @@ public sealed class MainPageViewModel
     public ICommand ShowQueueCommand { get; }
 
     public ICommand ShowPopupCommand { get; }
-    
+    public ICommand ShowModelPageCommand { get; }
 }

@@ -32,6 +32,16 @@ internal static partial class NativeToast
         var tcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         MainThread.BeginInvokeOnMainThread(async () =>
         {
+            var activity = Platform.CurrentActivity;
+            if (activity is null) return;
+
+            // Re-check decor mỗi lần — modal có thể đã push/pop
+            var targetDecor = GetTopmostDecorView(activity);
+            if (_overlayParent is not null && !ReferenceEquals(_overlayParent, targetDecor))
+                TeardownOverlay();
+
+            if (!EnsureOverlay(activity)) return;
+
             try { await PresentAsync(options).ConfigureAwait(true); }
             catch { }
             finally { tcs.TrySetResult(); }
@@ -272,15 +282,18 @@ internal static partial class NativeToast
 
     private static bool EnsureOverlay(Activity activity)
     {
-        if (_overlay is not null && ReferenceEquals(_overlayActivity, activity))
+        var targetDecor = GetTopmostDecorView(activity);
+
+        if (_overlay is not null
+            && ReferenceEquals(_overlayActivity, activity)
+            && ReferenceEquals(_overlayParent, targetDecor))
             return true;
 
         TeardownOverlay();
 
-        if (activity.Window?.DecorView is not ViewGroup decor) return false;
+        if (targetDecor is null) return false;
 
         var overlay = new FrameLayout(activity);
-
         var topStack = BuildStack(activity, GravityFlags.Top, padTop: TopInsetDp, padBottom: 0);
         var centerStack = BuildStack(activity, GravityFlags.CenterVertical, padTop: 0, padBottom: 0);
         var bottomStack = BuildStack(activity, GravityFlags.Bottom, padTop: 0, padBottom: BottomInsetDp);
@@ -291,16 +304,13 @@ internal static partial class NativeToast
 
         try
         {
-            decor.AddView(overlay, new ViewGroup.LayoutParams(
+            targetDecor.AddView(overlay, new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MatchParent,
                 ViewGroup.LayoutParams.MatchParent));
         }
-        catch
-        {
-            return false;
-        }
+        catch { return false; }
 
-        overlay.Elevation = DpToPx(activity, 1000);
+        overlay.Elevation = float.MaxValue;
         overlay.BringToFront();
 
         overlay.SetOnApplyWindowInsetsListener(new InsetsListener());
@@ -311,9 +321,38 @@ internal static partial class NativeToast
         _topStack = topStack;
         _centerStack = centerStack;
         _bottomStack = bottomStack;
-        _overlayParent = decor;
+        _overlayParent = targetDecor;
         _overlayActivity = activity;
         return true;
+    }
+
+    private static ViewGroup? GetTopmostDecorView(Activity activity)
+    {
+        try
+        {
+            // MAUI PushModalAsync dùng AndroidX DialogFragment
+            // Fragment manager chứa dialog fragment trên cùng
+            if (activity is AndroidX.Fragment.App.FragmentActivity fragmentActivity)
+            {
+                var fm = fragmentActivity.SupportFragmentManager;
+
+                // Duyệt từ trên xuống để lấy dialog đang hiển thị trên cùng
+                for (int i = fm.Fragments.Count - 1; i >= 0; i--)
+                {
+                    var fragment = fm.Fragments[i];
+                    if (fragment is AndroidX.Fragment.App.DialogFragment dialogFragment
+                        && dialogFragment.ShowsDialog
+                        && dialogFragment.Dialog?.Window?.DecorView is ViewGroup dialogDecor)
+                    {
+                        return dialogDecor;
+                    }
+                }
+            }
+        }
+        catch { }
+
+        // Fallback: DecorView của activity chính
+        return activity.Window?.DecorView as ViewGroup;
     }
 
     private static void ApplyCurrentInsets(FrameLayout overlay)

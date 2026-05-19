@@ -61,6 +61,12 @@
                 Text="Show Popup test"
                 TextColor="White" />
 
+            <Button
+                BackgroundColor="#333"
+                Command="{Binding ShowModelPageCommand}"
+                Text="Show Model test"
+                TextColor="White" />
+
         </VerticalStackLayout>
     </ScrollView>
 
