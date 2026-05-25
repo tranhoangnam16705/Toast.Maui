@@ -1,8 +1,4 @@
-﻿using Microsoft.Maui.LifecycleEvents;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Toast.Maui.Toasts;
+﻿using Toast.Maui.Toasts;
 
 namespace Toart.Maui
 {

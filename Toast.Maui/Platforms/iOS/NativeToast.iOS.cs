@@ -1,8 +1,6 @@
 using CoreAnimation;
 using CoreFoundation;
 using CoreGraphics;
-using Foundation;
-using Microsoft.Maui.ApplicationModel;
 using UIKit;
 
 namespace Toast.Maui.Toasts;

@@ -20,5 +20,4 @@
                 VerticalOptions="Center" />
         </VerticalStackLayout>
     </Grid>
-
 </ContentPage>

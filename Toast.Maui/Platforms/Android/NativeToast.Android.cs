@@ -4,7 +4,6 @@ using Android.Graphics.Drawables;
 using Android.Views;
 using Android.Views.Animations;
 using Android.Widget;
-using Microsoft.Maui.ApplicationModel;
 using AColor = Android.Graphics.Color;
 using AView = Android.Views.View;
 
@@ -480,8 +479,11 @@ public static partial class NativeToast
         public bool DismissedBySwipe => Volatile.Read(ref _dismissedBySwipe);
 
         public void RequestDismiss() => Volatile.Write(ref _dismissRequested, true);
+
         public void Pause() => Interlocked.Increment(ref _pauseCount);
+
         public void Resume() => Interlocked.Decrement(ref _pauseCount);
+
         public void MarkDismissedBySwipe() => Volatile.Write(ref _dismissedBySwipe, true);
     }
 

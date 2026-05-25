@@ -1,4 +1,3 @@
-using Mopups.Pages;
 using Mopups.Services;
 using System.Windows.Input;
 using Toast.Maui.Toasts;
@@ -15,16 +14,16 @@ public sealed class MainPageViewModel
         _toast = toast;
 
         ShowSuccessCommand = new Command(async () =>
-            await _toast.ShowSuccessAsync("Lưu thành công ✓"));
+             _toast.ShowMessageSuccess("Lưu thành công ✓"));
 
         ShowErrorCommand = new Command(async () =>
-            await _toast.ShowErrorAsync("Không thể kết nối tới máy chủ", 4, ToastPosition.Bottom));
+             _toast.ShowMessageError("Không thể kết nối tới máy chủ", 4, ToastPosition.Bottom));
 
         ShowWarningCommand = new Command(async () =>
-            await _toast.ShowWarningAsync("Pin thiết bị yếu", 3, ToastPosition.Center));
+             _toast.ShowMessageWarning("Pin thiết bị yếu", 3, ToastPosition.Center));
 
         ShowInfoCommand = new Command(async () =>
-            await _toast.ShowInfoAsync("Bạn có 3 tin nhắn mới"));
+             _toast.ShowMessageInfo("Bạn có 3 tin nhắn mới"));
 
         ShowActionCommand = new Command(async () =>
             await _toast.ShowAsync(new ToastOptions
@@ -35,15 +34,15 @@ public sealed class MainPageViewModel
                 Position = ToastPosition.Top,
                 ActionText = "Undo",
                 OnAction = async () =>
-                    await _toast.ShowInfoAsync("Đã hoàn tác", 2, ToastPosition.Bottom),
+                     _toast.ShowMessageInfo("Đã hoàn tác", 2, ToastPosition.Bottom),
             }));
 
         ShowQueueCommand = new Command(() =>
         {
-            _ = _toast.ShowInfoAsync("Toast #1 — top stack", 4);
-            _ = _toast.ShowSuccessAsync("Toast #2 — top stack", 4);
-            _ = _toast.ShowWarningAsync("Toast #3 — bottom stack", 4, ToastPosition.Bottom);
-            _ = _toast.ShowErrorAsync("Toast #4 — bottom stack", 4, ToastPosition.Bottom);
+            _toast.ShowMessageInfo("Toast #1 — top stack", 4);
+            _toast.ShowMessageSuccess("Toast #2 — top stack", 4);
+            _toast.ShowMessageWarning("Toast #3 — bottom stack", 4, ToastPosition.Bottom);
+            _toast.ShowMessageError("Toast #4 — bottom stack", 4, ToastPosition.Bottom);
         });
 
         ShowPopupCommand = new Command(async () =>

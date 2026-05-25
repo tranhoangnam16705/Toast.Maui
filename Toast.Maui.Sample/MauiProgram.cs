@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Mopups.Hosting;
+﻿using Mopups.Hosting;
 using Toart.Maui;
 
 namespace Toast.Maui.Sample

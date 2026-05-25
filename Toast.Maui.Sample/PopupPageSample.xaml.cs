@@ -5,9 +5,9 @@ namespace Toast.Maui.Sample;
 
 public partial class PopupPageSample : PopupPage
 {
-	public PopupPageSample(IToastService toastService)
-	{
-		InitializeComponent();
+    public PopupPageSample(IToastService toastService)
+    {
+        InitializeComponent();
         BindingContext = new PopupPageSampleViewModel(toastService);
     }
 }
