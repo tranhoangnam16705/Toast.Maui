@@ -8,16 +8,16 @@ public sealed class ToastService : IToastService
         return NativeToast.ShowAsync(options);
     }
 
-    public void ShowMessageSuccess(string message, double duration = 3, ToastPosition position = ToastPosition.Top)
+    public void ShowMessageSuccess(string message, double duration = 3, ToastPosition position = ToastPosition.Bottom)
         => ShowAsync(new ToastOptions { Message = message, Type = ToastType.Success, Duration = duration, Position = position });
 
-    public void ShowMessageError(string message, double duration = 3, ToastPosition position = ToastPosition.Top)
+    public void ShowMessageError(string message, double duration = 3, ToastPosition position = ToastPosition.Bottom)
         => ShowAsync(new ToastOptions { Message = message, Type = ToastType.Error, Duration = duration, Position = position });
 
-    public void ShowMessageWarning(string message, double duration = 3, ToastPosition position = ToastPosition.Top)
+    public void ShowMessageWarning(string message, double duration = 3, ToastPosition position = ToastPosition.Bottom)
         => ShowAsync(new ToastOptions { Message = message, Type = ToastType.Warning, Duration = duration, Position = position });
 
-    public void ShowMessageInfo(string message, double duration = 3, ToastPosition position = ToastPosition.Top)
+    public void ShowMessageInfo(string message, double duration = 3, ToastPosition position = ToastPosition.Bottom)
         => ShowAsync(new ToastOptions { Message = message, Type = ToastType.Info, Duration = duration, Position = position });
 
     public void DismissCurrent() => NativeToast.DismissCurrent();

@@ -13,9 +13,9 @@
 
 	<PropertyGroup>
 		<SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>
-		<AssemblyVersion>0.0.2</AssemblyVersion>
-		<AssemblyFileVersion>0.0.2</AssemblyFileVersion>
-		<Version>0.0.2</Version>
+		<AssemblyVersion>0.0.1</AssemblyVersion>
+		<AssemblyFileVersion>0.0.1</AssemblyFileVersion>
+		<Version>0.0.1</Version>
 		<NeutralLanguage>en</NeutralLanguage>
 		<!--Version of C# to use -->
 		<PackageId>Toast.Maui</PackageId>
