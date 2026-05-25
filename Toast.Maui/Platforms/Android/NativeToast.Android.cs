@@ -10,7 +10,7 @@ using AView = Android.Views.View;
 
 namespace Toast.Maui.Toasts;
 
-internal static partial class NativeToast
+public static partial class NativeToast
 {
     private const int TopInsetDp = 12;
     private const int BottomInsetDp = 12;

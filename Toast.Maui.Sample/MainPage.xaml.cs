@@ -1,4 +1,6 @@
-namespace Toast.Maui
+﻿using Toast.Maui.Sample;
+
+namespace Toast.Maui.Sample
 {
     public partial class MainPage : ContentPage
     {

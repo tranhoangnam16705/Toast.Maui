@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace Toast.Maui
+namespace Toast.Maui.Sample
 {
     [Application]
     public class MainApplication : MauiApplication

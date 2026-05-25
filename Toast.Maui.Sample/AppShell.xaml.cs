@@ -1,4 +1,4 @@
-﻿namespace Toast.Maui
+﻿namespace Toast.Maui.Sample
 {
     public partial class AppShell : Shell
     {

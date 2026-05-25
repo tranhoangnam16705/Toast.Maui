@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows.Input;
 using Toast.Maui.Toasts;
 
-namespace Toast.Maui
+namespace Toast.Maui.Sample
 {
     public sealed class PopupPageSampleViewModel
     {

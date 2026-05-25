@@ -7,7 +7,7 @@ using UIKit;
 
 namespace Toast.Maui.Toasts;
 
-internal static partial class NativeToast
+public static partial class NativeToast
 {
     private const float TopInset = 12f;
     private const float BottomInset = 12f;

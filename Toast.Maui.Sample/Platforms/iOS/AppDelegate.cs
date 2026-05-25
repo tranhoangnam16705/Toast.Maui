@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace Toast.Maui
+namespace Toast.Maui.Sample
 {
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate

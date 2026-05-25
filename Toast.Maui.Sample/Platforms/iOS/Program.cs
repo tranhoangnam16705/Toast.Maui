@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace Toast.Maui
+namespace Toast.Maui.Sample
 {
     public class Program
     {

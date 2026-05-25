@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Mopups.Hosting;
-using Toast.Maui.Toasts;
+using Toart.Maui;
 
-namespace Toast.Maui
+namespace Toast.Maui.Sample
 {
     public static class MauiProgram
     {
@@ -15,9 +15,8 @@ namespace Toast.Maui
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                }).ConfigureMopups();
+                }).UseToast().ConfigureMopups();
 
-            builder.Services.AddSingleton<IToastService, ToastService>();
             builder.Services.AddTransient<MainPageViewModel>();
             builder.Services.AddTransient<PopupPageSampleViewModel>();
             builder.Services.AddTransient<MainPage>();

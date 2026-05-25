@@ -1,7 +1,7 @@
 using Mopups.Pages;
 using Toast.Maui.Toasts;
 
-namespace Toast.Maui;
+namespace Toast.Maui.Sample;
 
 public partial class PopupPageSample : PopupPage
 {

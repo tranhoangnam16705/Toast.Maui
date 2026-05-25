@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Toast.Maui
+namespace Toast.Maui.Sample
 {
     public partial class App : Application
     {

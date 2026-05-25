@@ -5,7 +5,7 @@ namespace Toast.Maui.Toasts;
 // the UIKit/Android APIs that drive rendering. This avoids hosting MAUI
 // Grid on a disembodied top-level window, which doesn't propagate layout
 // invalidation without a Window ancestor.
-internal static partial class NativeToast
+public static partial class NativeToast
 {
     public static partial Task ShowAsync(ToastOptions options);
 
